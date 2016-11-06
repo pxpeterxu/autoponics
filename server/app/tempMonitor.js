@@ -2,7 +2,7 @@ import five from 'johnny-five';
 import Edison from 'edison-io';
 import express from 'express';
 
-import config from './config';
+import { tempMonitor as config } from './config';
 
 const router = express.Router();
 
