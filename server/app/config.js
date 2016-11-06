@@ -10,7 +10,7 @@ export const tempMonitor = {
 };
 
 export const tempControl = {
-  pin: 2,
+  pin: 5,
   minTemperature: 68,
   maxTemperature: 85,
   defaultTemperature: 79

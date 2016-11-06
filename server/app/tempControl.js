@@ -16,6 +16,7 @@ const board = new five.Board({
 });
 
 board.on('ready', () => {
+  console.log(config.pin);
   servo = new five.Servo(config.pin);
   setTemperature(config.defaultTemperature);
 });
@@ -24,11 +25,11 @@ function setTemperature(temp) {
   let angle;
   // 180 is the lowest temperature, 0 is the highest
   if (temp < config.minTemperature) {
-    angle = 180;
-  } else if (temp > config.maxTemperature) {
     angle = 0;
+  } else if (temp > config.maxTemperature) {
+    angle = 180;
   } else {
-    angle = Math.round((config.maxTemperature - temp) / (config.maxTemperature - config.minTemperature) * 180);
+    angle = Math.round((temp - config.minTemperature) / (config.maxTemperature - config.minTemperature) * 180);
   }
 
   servo.to(angle);
