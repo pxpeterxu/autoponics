@@ -16,9 +16,16 @@ export const tempControl = {
   defaultTemperature: 79
 };
 
+export const lights = {
+  relayType: 'NC',  // Default on
+  pin: 6,
+  defaultOn: false
+};
+
 export default Object.assign({
   tempMonitor,
   tempControl,
+  lights,
   logPath: __dirname + '/../logs/log.txt',
   port: 59876
 }, config);
