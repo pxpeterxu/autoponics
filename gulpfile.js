@@ -88,7 +88,7 @@ createBuildServerGulpTask('build-server-js', [
   '!server/{public,build,node_modules}/**/*.js'
 ], 'dist/app');
 
-createCopyGulpTask('copy-server', 'server/{{logs,public}/**/*}', 'dist/app', serverWatchGlobs);
+createCopyGulpTask('copy-server', 'server/{{logs,public,views}/**/*}', 'dist/app', serverWatchGlobs);
 
 var nodemon = require('gulp-nodemon');
 var livereload = require('gulp-livereload');

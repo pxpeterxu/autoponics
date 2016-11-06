@@ -4,6 +4,7 @@ import feederControl from './feederControl';
 import lights from './lights';
 import pump from './pump';
 import ventilation from './ventilation';
+import frontend from './frontend';
 
 export default function loadRoutes(app) {
   app.use('/tempMonitor', tempMonitor);
@@ -12,6 +13,7 @@ export default function loadRoutes(app) {
   app.use('/lights', lights);
   app.use('/pump', pump);
   app.use('/ventilation', ventilation);
+  app.use('/', frontend);
 
   return app;
 }
