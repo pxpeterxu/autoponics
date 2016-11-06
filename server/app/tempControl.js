@@ -39,8 +39,7 @@ function setTemperature(temp) {
 //
 // Express functions
 //
-
-router.get('/set/:temperature', (req, res) => {
+function setTemperatureRoute(req, res) {
   const temperature = req.params.temperature;
   const angle = setTemperature(temperature);
 
@@ -48,6 +47,9 @@ router.get('/set/:temperature', (req, res) => {
     angle,
     temperature
   });
-});
+}
+
+router.post('/set/:temperature', setTemperatureRoute);
+router.get('/set/:temperature', setTemperatureRoute);
 
 export default router;

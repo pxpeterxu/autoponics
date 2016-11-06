@@ -60,10 +60,13 @@ function updateLcd(temp) {
 // Express functions
 //
 
-router.get('/latest', (req, res) => {
+function getTemperatureRoute(req, res) {
   res.json({
     temperature
   });
-});
+}
+
+router.get('/', getTemperatureRoute);
+router.get('/latest', getTemperatureRoute);
 
 export default router;
