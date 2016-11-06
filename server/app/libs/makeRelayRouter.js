@@ -18,6 +18,7 @@ export default function makeRelayRouter(config) {
   let relay;
 
   board.on('ready', () => {
+    console.log('Initializing relay');
     relay = new five.Relay({
       type: config.relayType,
       pin: config.pin
@@ -29,8 +30,10 @@ export default function makeRelayRouter(config) {
   function setState(on) {
     isOn = on;
     if (isOn) {
+      console.log(`Turning ${config.name} on`);
       relay.on();
     } else {
+      console.log(`Turning ${config.name} off`);
       relay.off();
     }
   }
