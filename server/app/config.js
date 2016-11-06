@@ -16,9 +16,17 @@ export const tempControl = {
   defaultTemperature: 79
 };
 
+export const feederControl = {
+  pin: 6,
+  loadAngle: 180,
+  dispenseAngle: 0
+};
+
+
 export default Object.assign({
   tempMonitor,
   tempControl,
+  feederControl,
   logPath: __dirname + '/../logs/log.txt',
   port: 59876
 }, config);
