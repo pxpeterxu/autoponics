@@ -22,11 +22,17 @@ export const feederControl = {
   dispenseAngle: 0
 };
 
+export const lights = {
+  relayType: 'NO',
+  pin: 7,
+  defaultOn: false
+};
 
 export default Object.assign({
   tempMonitor,
   tempControl,
   feederControl,
+  lights,
   logPath: __dirname + '/../logs/log.txt',
   port: 59876
 }, config);
