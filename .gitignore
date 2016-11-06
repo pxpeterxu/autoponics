@@ -1,0 +1,7 @@
+node_modules
+.DS_Store
+dist
+temp.txt
+Thumbs.db
+.http-mitm-proxy
+npm-debug.log

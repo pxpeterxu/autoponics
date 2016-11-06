@@ -1,0 +1,9 @@
+#!/usr/bin/env node
+import app from '../app';
+import config from '../app/config';
+
+app.set('port', process.env.PORT || config.port);
+
+const server = app.listen(app.get('port'), () => {
+  console.log('Express server listening on port ' + server.address().port);
+});
