@@ -17,7 +17,7 @@ export const tempControl = {
 };
 
 export const lights = {
-  relayType: 'NC',  // Default on
+  relayType: 'NO',  // Default on; normally open
   pin: 6,
   defaultOn: false
 };
