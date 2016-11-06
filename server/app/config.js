@@ -28,11 +28,25 @@ export const lights = {
   defaultOn: false
 };
 
+export const pump = {
+  relayType: 'NO',
+  pin: 8,
+  defaultOn: false
+};
+
+export const ventilation = {
+  relayType: 'NO',
+  pin: 4,
+  defaultOn: true
+};
+
 export default Object.assign({
   tempMonitor,
   tempControl,
   feederControl,
   lights,
+  pump,
+  ventilation,
   logPath: __dirname + '/../logs/log.txt',
   port: 59876
 }, config);

@@ -6,7 +6,7 @@ import { feederControl as config } from './config';
 
 const router = express.Router();
 
-let servo = null; 
+let servo = null;
 
 //
 // Edison functions
@@ -22,19 +22,17 @@ board.on('ready', () => {
 });
 
 function feedFish(req, res) {
-  servo.to(config.dispenseAngle); 
-  setTimeout(function() {
+  servo.to(config.dispenseAngle);
+  setTimeout(() => {
     servo.to(config.loadAngle);
     res.json({ success: true });
   }, 500);
-
 }
 
 //
 // Express functions
 //
 
-// router.post('/feed', feedFish);
+router.post('/feed', feedFish);
 router.get('/feed', feedFish);
 export default router;
-
