@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Autoponics Dashboard</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" 
+        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/master/build/css/bootstrap-datetimepicker.min.css">
+    <!--'
+    <link rel="stylesheet" href="https://cdn.rawgit.com/gobijan/maverix/master/maverix-theme/css/maverix.css">
+    -->
+    <style>
+        body {
+            padding-top: 1em;
+        }
+
+        .site-title {
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .tab-content {
+            padding-bottom: 20px;
+        }
+
+        .tab-pane img {
+            border-radius: 4px;
+        }
+
+        .panel-body p.hero {
+            margin: 0; padding: 0;
+            font-size: 2em;
+        }
+
+        .panel-body .push-down {
+            margin-bottom: 10px;
+        }
+
+        .panel-body .progress {
+            margin: 0; padding: 0;
+        }
+
+        .panel-body .progress-bar {
+            text-align: left;
+            padding-left: 5px;
+        }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+        <!-- title -->
+        <div class="row">
+            <div class="col-sm-12">
+                <h2 class="site-title">Autoponics</h2>
+                <hr>
+            </div>
+        </div>
+        <!-- content -->
+        <div class="row">
+            <!-- video -->
+            <div class="col-sm-6">
+                <!--<div class="row">
+                    <div class="col-sm-12">
+                        <img class="img-responsive" src="https://lh3.googleusercontent.com/-bB60pWlFCd0Up3viYpV-dUvxu-P65c-4r1r8c7q1SpHXMFwh9fYfKuQaRv1PuL_QEVlQiTTvszSUUSXh9g51U20eQv8i3oN1vN7HPkT2-qRHQ7PmQIHmRwhO_mAcFwKZorTbW0gYx9kNsrfGnd28z8gcxJwhCHJ_CAKR1Ci2IcWS46aOnR-NX07LZWkYPOq-G76nGNfIEnjii83zkstYc3279HwZq_Id2dby3F5LvB16JU5xiFmTkxbKewouX1lboPFygsrtGzZdXi_KeBntu2D7qjds4LLpgqatxJ_rq-tzVP_2-3FtUGAHk04v082VQe5GLqT9GJGUuC92lH8pE3zG6kfwrQtUR5YkYbcOw2PfHfx_Agx2OfHOh5D09l86CiQZ1Ba-nb8HMP7ozJVfGVgcyNpiuQ9yohDfe7EOmeS1QIl4v5p9pgs2chbc_3CkppR6o4C9TU0sBOi_Tr7rcaef4eC67zW67nNfrEfMbYEbhwf-IYf_BxVp3AgU7Y2xaCGlkRKKQ9UcG51vYBtgd1Ljx3AUmA1jSRNtJJsvAhywfJCf9rG3O_rcdXZXs2h7da4F9-KO0HebkhMtnsdtuu1WDsdocZ9SPsyKPVgrBMwT_jpAA=w1302-h732-no">
+                        <hr>
+                    </div>
+                </div>-->
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                Light
+                            </div>
+
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-sm-9">
+                                        <p class="hero">The light will switch in...</p>
+                                    </div>
+                                    <div class="col-sm-3 text-right">
+                                        <p class="hero"><span id="light-timer">00:00:00</span></p>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-9">
+                                        <p class="hero">Current state...</p>
+                                    </div>
+                                    <div class="col-sm-3 text-right">
+                                        <button id="light-prompt" class="btn btn-default btn-lg">OFF</button>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="form-inline">
+                                            <div class='input-group date' id='datetimepicker1'>
+                                                <input id="turn-on-light" type='text' class="form-control" placeholder="Turn on after..." />
+                                                <span class="input-group-addon">
+                                                    <span class="glyphicon glyphicon-calendar"></span>
+                                                </span>
+                                            </div>
+                                            <div class='input-group date' id='datetimepicker2'>
+                                                <input id="turn-off-light" type='text' class="form-control" placeholder="Turn off after..." />
+                                                <span class="input-group-addon">
+                                                    <span class="glyphicon glyphicon-calendar"></span>
+                                                </span>
+                                            </div>
+                                            <button id="update-temp" class="btn btn-primary" type="submit">Submit</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                Pump
+                            </div>
+                            <div class="panel-body text-center">
+                                <div class="row">
+                                    <button id="pump-prompt" class="btn btn-default btn-lg">OFF</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                Ventilation
+                            </div>
+                            <div class="panel-body text-center">
+                                <div class="row">
+                                    <button id="vent-prompt" class="btn btn-default btn-lg">OFF</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- modules -->
+            <div class="col-sm-6">
+                <!-- next feeding -->
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        Feed
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-sm-9">
+                                <p class="hero">Next feeding in...</p>
+                            </div>
+                            <div class="col-sm-3 text-right">
+                                <p class="hero"><span id="feed-timer">00:00:00</span></p>
+                                <button id="feed-prompt" class="btn btn-primary">Feed now</button>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="progress">
+                                    <div id="feed-amt" class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
+                                        40% Depleted
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- next watering -->
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        Water
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-sm-9">
+                                <p class="hero">Refreshing water in...</p>
+                            </div>
+                            <div class="col-sm-3 text-right">
+                                <p class="hero"><span id="water-timer">00:00:00</span></p>
+                                <button id="water-prompt" class="btn btn-primary">Refresh now</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- current temperature -->
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        Temperature
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-sm-9">
+                                <p class="hero">Current temperature</p>
+                            </div>
+                            <div class="col-sm-3 text-right">
+                                <p class="hero"><span id="current-temp">00</span> &#8457;</p>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="new-temp" placeholder="Set new temperature (Farenheit)">
+                                    <span class="input-group-btn">
+                                        <button id="update-temp" class="btn btn-primary" type="submit">Submit</button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="temp-timer" style="display:none;"></div>
+                <!-- stretch
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Cost Savings
+                    </div>
+                    <div class="panel-body">
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Carbon Savings
+                    </div>
+                    <div class="panel-body">
+                    </div>
+                </div>
+                -->
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" 
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="https://cdn.rawgit.com/walmik/timer.jquery/master/dist/timer.jquery.min.js" type="text/javascript"></script>
+    <script src="http://momentjs.com/downloads/moment.js"></script>
+    <script src="https://cdn.rawgit.com/Eonasdan/bootstrap-datetimepicker/master/build/js/bootstrap-datetimepicker.min.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            /*
+                #feed-timer
+                #feed-amt
+                #feed-prompt
+                #water-timer
+                #water-prompt
+                #current-temp
+                #new-temp
+                #update-temp
+            */
+            var test = true; // update
+            var feedTimer = 0; // 
+            var waterTimer = 0; //  
+            var currentTemp = 0; // in farenheit
+            var lightOn = false;
+            var lightOnTime = 6;
+            var lightOffTime = 22;
+            var pumpOn = false;
+            var ventOn = false;
+            setInitialState();
+
+            function setInitialState() {
+                // turn on date pickers
+                $('#datetimepicker1').datetimepicker({format: 'H'});
+                $('#datetimepicker2').datetimepicker({format: 'H'});
+
+                // timers
+                var feedTimer = 0;
+                $('#feed-timer').timer({
+                    countdown: true,
+                    duration: '17m30s',
+                    format: '%H:%M:%S',
+                    callback: function() {
+                        doFeed();
+                    },
+                    repeat: true
+                });
+
+                $('#water-timer').timer({
+                    countdown: true,
+                    duration: '52m17s',
+                    format: '%H:%M:%S',
+                    callback: function() {
+                        doWater();
+                    },
+                    repeat: true
+
+                });
+
+                // temperature, load initial and set timer for updating
+                updateTemperature(getTemperature);
+
+                $('#temp-timer').timer({
+                    countdown: true,
+                    duration: '3s',
+                    format: '%H:%M:%S',
+                    callback: function() {
+                        updateTemperature(getTemperature);
+                        $('#temp-timer').timer('reset');
+                    },
+                    repeat: true
+                });
+
+                // light
+                getLight();
+                updateLight();
+
+                $('#light-timer').timer({
+                    countdown: true,
+                    duration: '22m',
+                    format: '%H:%M:%S',
+                    callback: function() {
+                        doLight();
+                    },
+                    repeat: true
+                });
+
+                // pump
+                getPump();
+                updatePump();
+
+                // vent
+                getVent();
+                updateVent();
+
+                // get light on time
+                updateLightSchedule();
+            }
+
+            function getTemperature() {
+                if (test) {
+                    return random(75, 85);
+                } else {
+                    $.get("/tempMonitor/").done(function(currentTemp) {
+                        return currentTemp;
+                    });
+                }
+            }
+
+            function updateTemperature(newTemp) {
+                $('#current-temp').text(newTemp);
+            }
+
+            function setTemperature(newTemp) {
+                $.post("/tempControl/set/" + newTemp, function(data) {
+                    setTemperature(getTemperature);
+                    console.log(data); // for debugging purposes, probably.
+                }, "json");
+            }
+
+            function getLight() {
+                if (test) {
+                    return lightOn;
+                } else {
+                    $.get("/lights/").done(function(lightsOn) {
+                        return lightsOn;
+                    });
+                }
+            }
+
+            function getLightSchedule() {
+                if (test) {
+                    return '';
+                } else {
+                    $.get("/lights/schedule").done(function(data) {
+                        // onAt, offAt
+                        lightOnTime = data.onAt;
+                        lightOffTime = data.offAt;
+                        updateLightSchedule;
+                    });
+                }
+            }
+
+            function updateLight() {
+                console.log("Updating light");
+                if (lightOn) {
+                    $('#light-prompt').text('ON');
+                    $('#light-prompt').removeClass('btn-default');
+                    $('#light-prompt').addClass('btn-primary');
+                } else {
+                    $('#light-prompt').text('OFF');
+                    $('#light-prompt').addClass('btn-default');
+                    $('#light-prompt').removeClass('btn-primary');
+                }
+            }
+
+            function updateLightSchedule() {
+                $('#turn-on-light').text(lightOnTime);
+                $('#turn-off-light').text(lightOffTime);
+            }
+
+            function getPump() {
+                if (test) {
+                    return pumpOn;
+                } else {
+                    $.get("/pump/").done(function(pumpOn) {
+                        return pumpOn;
+                    });
+                }
+            }
+
+            function updatePump() {
+                if (pumpOn) {
+                    $('#pump-prompt').text('ON');
+                    $('#pump-prompt').removeClass('btn-default');
+                    $('#pump-prompt').addClass('btn-primary');
+                } else {
+                    $('#pump-prompt').text('OFF');
+                    $('#pump-prompt').addClass('btn-default');
+                    $('#pump-prompt').removeClass('btn-primary');
+                }
+            }
+
+            function getVent() {
+                if (test) {
+                    return ventOn;
+                } else {
+                    $.get("/ventilation/").done(function(ventOn) {
+                        return ventOn;
+                    });
+                }
+            }
+
+            function updateVent() {
+                if (ventOn) {
+                    $('#vent-prompt').text('ON');
+                    $('#vent-prompt').removeClass('btn-default');
+                    $('#vent-prompt').addClass('btn-primary');
+                } else {
+                    $('#vent-prompt').text('OFF');
+                    $('#vent-prompt').addClass('btn-default');
+                    $('#vent-prompt').removeClass('btn-primary');
+                }
+            }
+
+            function doFeed() {
+                $('#feed-timer').timer('reset');
+
+                if (!test) {
+                    $.get("/feederControl/feed", function(data) {
+                        $('#feed-timer').timer('reset');
+                        console.log(data); // for debugging purposes, probably.
+                    }, "json");
+                }
+            }
+
+            function doWater() {
+                $('#water-timer').timer('reset');
+
+                if (!test) {
+                    $.post("/waterControl/refresh", function(data) {
+                        $('#water-timer').timer('reset');
+                        console.log(data); // for debugging purposes, probably.
+                    }, "json");
+                }
+            }
+
+            function doLight() {
+                $('#light-timer').timer('reset');
+
+                if (!test) {
+                    if (lightOn) {
+                        $.post("/lights/off", function(data) {
+                            lightOn = !lightOn;
+                            updateLight();
+                            console.log(data); // for debugging purposes, probably.
+                        }, "json");
+                    } else {
+                        $.post("/lights/on", function(data) {
+                            lightOn = !lightOn;
+                            updateLight();
+                            console.log(data); // for debugging purposes, probably.
+                        }, "json");
+                    }
+                    
+                } else {
+                    lightOn = !lightOn;
+                    updateLight();
+                }
+            }
+
+            function doLightSchedule() {
+                if (!test) {
+
+                } else {
+                    updateLightSchedule();
+                }
+                $('#light-timer').timer('reset');
+            }
+
+            function doPump() {
+                if (!test) {
+                    if (pumpOn) {
+                        $.post("/pump/off", function(data) {
+                            pumpOn = !pumpOn;
+                            updatePump();
+                            console.log(data); // for debugging purposes, probably.
+                        }, "json");
+                    } else {
+                        $.post("/pump/on", function(data) {
+                            pumpOn = !pumpOn;
+                            updatePump();
+                            console.log(data); // for debugging purposes, probably.
+                        }, "json");
+                    }
+                    
+                } else {
+                    pumpOn = !pumpOn;
+                    updatePump();
+                }
+            }
+
+            function doVent() {
+                if (!test) {
+                    if (ventOn) {
+                        $.post("/ventilation/off", function(data) {
+                            ventOn = !ventOn;
+                            updateVent();
+                            console.log(data); // for debugging purposes, probably.
+                        }, "json");
+                    } else {
+                        $.post("/ventilation/on", function(data) {
+                            ventOn = !ventOn;
+                            updateVent();
+                            console.log(data); // for debugging purposes, probably.
+                        }, "json");
+                    }
+                    
+                } else {
+                    ventOn = !ventOn;
+                    updateVent();
+                }
+            }
+
+            // events
+            $('#feed-prompt').click(function() {
+                doFeed();
+            });
+
+            $('#water-prompt').click(function() {
+                doWater();
+            });
+
+            $('#light-prompt').click(function() {
+                doLight();
+            });
+
+            $('#pump-prompt').click(function() {
+                doPump();
+            });
+
+            $('#vent-prompt').click(function() {
+                doVent();
+            });
+
+            $('#update-temp').click(function() {
+                var newTemp = $('#new-temp').val();
+                setTemperature(newTemp);
+            });
+
+            // helper
+            function random(min, max) {
+                return (Math.random() * (max - min) + min).toFixed(2);;
+            }
+        });
+    </script>
+  </body>
+</html>
