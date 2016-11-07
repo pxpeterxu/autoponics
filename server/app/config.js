@@ -23,21 +23,20 @@ export const feederControl = {
 };
 
 export const lights = {
-  name: 'lights',
   relayType: 'NO',
   pin: 7,
-  defaultOn: false
+  defaultOn: false,
+  defaultOnAt: 7,
+  defaultOffAt: 7
 };
 
 export const pump = {
-  name: 'pump',
   relayType: 'NO',
   pin: 8,
   defaultOn: false
 };
 
 export const ventilation = {
-  name: 'fan',
   relayType: 'NO',
   pin: 4,
   defaultOn: true

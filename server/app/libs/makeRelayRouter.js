@@ -2,7 +2,7 @@ import five from 'johnny-five';
 import Edison from 'edison-io';
 import express from 'express';
 
-export default function makeRelayRouter(config) {
+export default function makeRelayRouter(config, defaultState, onReady) {
   const router = express.Router();
 
   //
@@ -14,26 +14,25 @@ export default function makeRelayRouter(config) {
 
   // So we're going to just use a global variable (it's only global in this file)
   // to store the state for use in requests
-  let isOn = config.defaultOn;
+  let isOn = defaultState != null ? defaultState : config.defaultOn;
   let relay;
 
   board.on('ready', () => {
-    console.log('Initializing relay');
     relay = new five.Relay({
       type: config.relayType,
       pin: config.pin
     });
 
     setState(isOn);
+
+    if (onReady) onReady(setState);
   });
 
   function setState(on) {
     isOn = on;
     if (isOn) {
-      console.log(`Turning ${config.name} on`);
       relay.on();
     } else {
-      console.log(`Turning ${config.name} off`);
       relay.off();
     }
   }
@@ -55,6 +54,9 @@ export default function makeRelayRouter(config) {
     setState(false);
     res.json({ on: false });
   });
+
+  router.relay = relay;
+  router.setState = setState;  // Expose the setState function for other uses
 
   return router;
 }
