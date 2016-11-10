@@ -27,7 +27,7 @@ export const lights = {
   pin: 7,
   defaultOn: false,
   defaultOnAt: 7,
-  defaultOffAt: 7
+  defaultOffAt: 18
 };
 
 export const pump = {

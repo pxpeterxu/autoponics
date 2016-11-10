@@ -112,8 +112,9 @@
                                                     <span class="glyphicon glyphicon-calendar"></span>
                                                 </span>
                                             </div>
-                                            <button id="update-temp" class="btn btn-primary" type="submit">Submit</button>
+                                            <button id="update-light-schedule" class="btn btn-primary" type="submit">Submit</button>
                                         </div>
+                                        <div id="light-schedule-message"></div>
                                     </div>
                                 </div>
                             </div>
@@ -216,6 +217,7 @@
                                         <button id="update-temp" class="btn btn-primary" type="submit">Submit</button>
                                     </span>
                                 </div>
+                                <div id="tempControlMessage"></div>
                             </div>
                         </div>
                     </div>
@@ -266,8 +268,8 @@
             var waterTimer = 0; //
             var currentTemp = 0; // in farenheit
             var lightOn = false;
-            var lightOnTime = 6;
-            var lightOffTime = 22;
+            var lightOnTime = 7;
+            var lightOffTime = 18;
             var pumpOn = false;
             var ventOn = false;
             setInitialState();
@@ -281,7 +283,7 @@
                 var feedTimer = 0;
                 $('#feed-timer').timer({
                     countdown: true,
-                    duration: '17m30s',
+                    duration: '37m23s',
                     format: '%H:%M:%S',
                     callback: function() {
                         doFeed();
@@ -301,14 +303,18 @@
                 });
 
                 // temperature, load initial and set timer for updating
-                updateTemperature(getTemperature);
+                getTemperature().then(function(temperature) {
+                  updateTemperature(temperature);
+                });
 
                 $('#temp-timer').timer({
                     countdown: true,
                     duration: '3s',
                     format: '%H:%M:%S',
                     callback: function() {
-                        updateTemperature(getTemperature);
+                        getTemperature().then(function(temperature) {
+                            updateTemperature(temperature);
+                        });
                         $('#temp-timer').timer('reset');
                     },
                     repeat: true
@@ -318,23 +324,21 @@
                 getLight();
                 updateLight();
 
+                // light
+                getLightSchedule().then(function() { updateLightSchedule(); });
+
                 $('#light-timer').timer({
                     countdown: true,
-                    duration: '22m',
+                    duration: '25m12s',
                     format: '%H:%M:%S',
-                    callback: function() {
-                        doLight();
-                    },
                     repeat: true
                 });
 
                 // pump
-                getPump();
-                updatePump();
+                getPump().then(function() { updatePump(); });
 
                 // vent
-                getVent();
-                updateVent();
+                getVent().then(function() { updateVent(); });
 
                 // get light on time
                 updateLightSchedule();
@@ -344,8 +348,10 @@
                 if (test) {
                     return random(75, 85);
                 } else {
-                    $.get("/tempMonitor/").done(function(currentTemp) {
-                        return currentTemp;
+                    return new Promise(function(resolve) {
+                        $.get("/tempMonitor/").done(function(currentTemp) {
+                            resolve(currentTemp.temperature);
+                        });
                     });
                 }
             }
@@ -356,7 +362,7 @@
 
             function setTemperature(newTemp) {
                 $.post("/tempControl/set/" + newTemp, function(data) {
-                    setTemperature(getTemperature);
+                    $('#tempControlMessage').html('<div class="alert alert-info" style="margin-top: 10px">Thermostat set to ' + newTemp + '. It will take a while for the water temperature to change to this.</div>');
                     console.log(data); // for debugging purposes, probably.
                 }, "json");
             }
@@ -373,13 +379,15 @@
 
             function getLightSchedule() {
                 if (test) {
-                    return '';
+                    return Promise.resolve({ onAt: lightOnTime, offAt: lightOffTime });;
                 } else {
-                    $.get("/lights/schedule").done(function(data) {
-                        // onAt, offAt
-                        lightOnTime = data.onAt;
-                        lightOffTime = data.offAt;
-                        updateLightSchedule;
+                    return new Promise(function(resolve) {
+                        $.get("/lights/schedule").done(function(data) {
+                            // onAt, offAt
+                            lightOnTime = data.onAt;
+                            lightOffTime = data.offAt;
+                            resolve(data);
+                        });
                     });
                 }
             }
@@ -397,17 +405,54 @@
                 }
             }
 
+            function getNextTime(hour, now) {
+                now = now || moment();
+                var time = moment().startOf('hour').hour(hour);
+                if (time.isBefore(now)) {
+                    time.add(1,'day');
+                }
+                return time;
+            }
+
             function updateLightSchedule() {
-                $('#turn-on-light').text(lightOnTime);
-                $('#turn-off-light').text(lightOffTime);
+                var nextOnTime = getNextTime(lightOnTime);
+                var nextOffTime = getNextTime(lightOffTime);
+
+                var nextTime = nextOnTime.isBefore(nextOffTime) ? nextOnTime : nextOffTime;
+                $('#light-timer').timer({
+                    countdown: true,
+                    seconds: Math.round((+nextTime - moment()) / 1000),
+                    format: '%H:%M:%S',
+                    repeat: true
+                });
+
+                $('#turn-on-light').val(lightOnTime);
+                $('#turn-off-light').val(lightOffTime);
+            }
+
+            function setLightSchedule(onAt, offAt) {
+                return new Promise(function(resolve) {
+                    $.post('/lights/schedule', {
+                        onAt: onAt,
+                        offAt: offAt
+                    }).done(function(schedule) {
+                        lightOnTime = schedule.onAt;
+                        lightOffTime = schedule.offAt;
+                        $('#light-schedule-message').html('<div class="alert alert-info" style="margin-top: 10px">Updated your light scheduled and turned light on/off based on that</div>');
+                        resolve(schedule);
+                    });
+                });
             }
 
             function getPump() {
                 if (test) {
-                    return pumpOn;
+                    return Promise.resolve(pumpOn);
                 } else {
-                    $.get("/pump/").done(function(pumpOn) {
-                        return pumpOn;
+                    return new Promise(function(resolve) {
+                        $.get("/pump/").done(function(pumpState) {
+                            pumpOn = pumpState;
+                            return pumpOn;
+                        });
                     });
                 }
             }
@@ -426,10 +471,14 @@
 
             function getVent() {
                 if (test) {
-                    return ventOn;
+                    ventOn = false;
+                    return Promise.resolve(ventOn);
                 } else {
-                    $.get("/ventilation/").done(function(ventOn) {
-                        return ventOn;
+                    return new Promise(function(resolve) {
+                        $.get("/ventilation/").done(function(state) {
+                            ventOn = state.on;
+                            resolve(ventOn);
+                        });
                     });
                 }
             }
@@ -461,9 +510,17 @@
                 $('#water-timer').timer('reset');
 
                 if (!test) {
-                    $.post("/waterControl/refresh", function(data) {
-                        $('#water-timer').timer('reset');
+                    $.post("/pump/on", function(data) {
+                        pumpOn = true;
+                        updatePump();
                         console.log(data); // for debugging purposes, probably.
+
+                        setTimeout(function() {
+                            $.post('/pump/off', function(data) {
+                                pumpOn = false;
+                                updatePump();
+                            });
+                        }, 2000);
                     }, "json");
                 }
             }
@@ -569,6 +626,12 @@
             $('#update-temp').click(function() {
                 var newTemp = $('#new-temp').val();
                 setTemperature(newTemp);
+            });
+
+            $('#update-light-schedule').click(function() {
+                var onAt = $('#turn-on-light').val();
+                var offAt = $('#turn-off-light').val();
+                setLightSchedule(onAt, offAt);
             });
 
             // helper

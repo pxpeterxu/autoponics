@@ -12,7 +12,7 @@ let offAt = config.defaultOffAt;
 function getMostRecentHourInPast(hour, now) {
   now = now || moment();
 
-  const mostRecent = now.clone().startOf('day').hour(onAt);
+  const mostRecent = now.clone().startOf('day').hour(hour);
   if (mostRecent.isAfter(now)) {
     mostRecent.subtract(1, 'day');
   }
@@ -31,10 +31,13 @@ function getScheduledState() {
   const timeSinceOn = +now - mostRecentOn;
   const timeSinceOff = +now - mostRecentOff;
 
+  console.log('Time since on: ' + (timeSinceOn / 60 / 60 / 1000) + ' hours');
+  console.log('Time since off: ' + (timeSinceOff / 60 / 60 / 1000) + ' hours');
+
   return timeSinceOn < timeSinceOff;
 }
 
-function setStateWithSchedule(setState, force) {
+  function setStateWithSchedule(setState, force) {
   const newState = getScheduledState();
   console.log('Checking scheduled light state');
   console.log(`Current: ${lastScheduledState}`);
@@ -54,7 +57,7 @@ function setStateWithScheduleLoop(setState) {
 }
 
 const router = makeRelayRouter(config, getScheduledState(), setStateWithScheduleLoop);
-router.post('/lights/schedule', (req, res) => {
+router.post('/schedule', (req, res) => {
   const newOnAt = parseInt(req.body.onAt, 10);
   const newOffAt = parseInt(req.body.offAt, 10);
 
@@ -75,7 +78,7 @@ router.post('/lights/schedule', (req, res) => {
   res.json({ success: true, onAt, offAt });
 });
 
-router.get('/lights/schedule', (req, res) => {
+router.get('/schedule', (req, res) => {
   res.json({ onAt, offAt });
 });
 
