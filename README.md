@@ -43,7 +43,7 @@ The following API endpoints are built/planned:
 
 1. Set voltage to 5V
 2. Connect the Grove-LCD RGB Backlight and Temperature&Humidity Sensor (High-Accuracy & Mini) to any I2C port
-3. Connect the ventilation to port D4
+3. Connect the ventilation relay to port D4
 4. Connect the temperature servo to port D5
 5. Connect the feeder servo to port D6
 6. Connect the light relay to port D7
